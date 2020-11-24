@@ -1,0 +1,128 @@
+Improv_HomingMissileLauncher_epic
+Флейта
+AutoGuidedCourseGun_epic
+Сверчок
+Gun_BigCannon_Free_legend
+ЗИС-46 Мамонт
+Gun_GrenadeLauncher_Shotgun
+Тошнитель
+Gun_Syfy_Plazma_Legend
+Пульсар
+Gun_BigCannon_EX_Relic
+КП-18 Тайфун
+Gun_CannonMinigun_legend
+Жнец
+AutoGuidedCourseGun_Epic2
+Саранча
+Gun_Plasma_Drill
+Триггер
+Gun_WheelRocket
+Фортуна
+Gun_SMG_Legend
+П-39 Черт
+Gun_ShotGun_Garbage_legend
+Нитхегг
+Gun_Syfy_FusionRifle_legend
+Гелиос
+WheelDroneDeployer_epic
+Гренадер
+Quadrocopter_Syfy
+Аннигилятор
+Gun_Flamethrower_light
+Светлячок
+Gun_MineLauncher
+Дикобраз
+Gun_BigCannon_EX_Legend
+КП-17 Цунами
+Gun_Mortar_Revert
+Мандрагора
+Gun_LightningGun
+Ассемблер
+Gun_SniperCrossbow
+Скорпион
+Gun_Cannon_Legend
+Смерч
+Gun_Flamethrower_frontal
+Панацея
+Gun_Machinegun_Legendary
+Аспект
+Gun_BigCannon_EX_epic
+Палач 88мм
+Gun_Flamethrower_fixed
+Горыныч
+LanceExplosive
+Ланселот
+Gun_Machinegun_Corner
+П-26 Заградитель
+Gun_Shotgun_Relic
+Крушитель
+Gun_Flamethrower_frontal_C1_Raider
+Панацея
+Gun_Machinegun_Relic
+Каратель
+Gun_Shotgun_legend
+Молотобой
+Harvester_legend
+Комбайн
+Gun_Syfy_ParticleBeam
+Аврора
+Gun_Minigun_Legend
+ПУ14 Арбитр
+PowerGiver_legend
+Аполлон
+Gun_Syfy_FusionRifle_epic
+Прометей 5
+Gun_Syfy_Tesla
+Искра 3
+Gun_Catapult
+Испепелитель
+Gun_BigCannon_Free_epic
+Толстяк
+Gun_Syfy_ShotGun
+Гравастар
+Gun_DoubleCrossbow
+Иглобрюх
+Gun_Blast_ClassicCrossbow
+Феникс
+Gun_Shotgun_Preepic
+Булава
+Gun_MineLauncher_Legend
+Дамка
+HomingMissileLauncherBurstR_legend
+Ураган
+kamikazeDroneDeployer
+Запал
+Gun_ShotGun_Garbage_epic
+Фафнир
+Wheel_MonsterTruck_S
+Бигфут
+TurretDeployer_Preepic
+Питон
+ChainSaw_epic
+Терзатель
+Barrel
+Т.бочка
+Gun_Shotgun_Frontal_Preepic
+Кровопийца
+HomingMissileLauncher_epic
+Пламя
+TurretDeployer_rare
+Кобра
+Cabin_Bulldozer
+Бастион
+Shnekohod
+Шнекоход
+Blade_rare
+Тесак
+TankTrackBig_legend
+Гусеница (бр.)
+Gun_BigCannon_Free_T34_epic
+Слон
+Cabin_Kamikaze_DronSpawn
+Оборотень др.
+BladeWing_double
+Дв. лезвиекрыл
+Gun_BigCannon_Free_Preepic
+Верзила
+Gun_Lcannon_epic
+Джоуль

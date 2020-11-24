@@ -1,0 +1,8 @@
+  727 (  449)    35 |         Dominic| Ассемблер 727, 
+ 1152 (  572)    40 |           Ethan| CarPart_Gun_SmartMachinegun 741, CarPart_AutoGuidedCourseGun_rare 363, 
+ 1198 (  293)    66 |          Connor| Ассемблер 1158, CarPart_Wheel_MonsterTruck_S_C2_Raider 39, 
+ 1231 (  890)    12 | JonnyBonesJones| CarPart_Gun_SmartMachinegun 1186, Тесак 45, 
+ 1940 (  927)    34 |   J0KER_in_GAME| Пламя 1712, CarPart_BladeWing_epic 228, 
+ 3119 ( 1655)   851 |         Art_min| Фафнир 2196, Нитхегг 406, 
+ 4216 (  949)   415 |     BrodyagaBRO| Пульсар 4216, 
+ 6330 ( 1948)   893 |           iVMVi| CarPart_Gun_Cannon_epic 5304, Тесак 864, 

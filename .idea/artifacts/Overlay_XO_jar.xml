@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Overlay_XO:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/Overlay_XO_jar</output-path>
+    <root id="archive" name="Overlay_XO.jar">
+      <element id="module-output" name="Overlay_XO" />
+      <element id="extracted-dir" path="C:/JDBC/sqlite-jdbc-3.23.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
