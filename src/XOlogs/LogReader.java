@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import javax.sound.sampled.*;
 import javax.swing.JTextArea;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -25,50 +24,40 @@ public class LogReader extends Thread {
     //static private AtomicInteger saveBoolean = new AtomicInteger(0);
 
     private void saveToFile() {
-        final Runnable beeper = new Runnable() {
-            @Override
-            public void run() {
-                if (playersListFull != null && !playersListFull.isEmpty()) {
-                    ArrayList<PlayerShort> tempListA = new ArrayList<>();
-                    int teamNumber = playersListFull.get(0).getTeamNumber();
-                    for (PlayerShort p : playersListFull) {
-                        if (p.getTeamNumber().equals(teamNumber)) {
-                            tempListA.add(p);
-                        }
+        final Runnable beeper = () -> {
+            if (playersListFull != null && !playersListFull.isEmpty()) {
+                ArrayList<PlayerShort> tempListA = new ArrayList<>();
+                int teamNumber = playersListFull.get(0).getTeamNumber();
+                for (PlayerShort p : playersListFull) {
+                    if (p.getTeamNumber().equals(teamNumber)) {
+                        tempListA.add(p);
                     }
-
-                    ArrayList<PlayerShort> tempListB = new ArrayList<>();
-                    int teamNumber2 = 3 - tempListA.get(0).getTeamNumber();
-                    for (PlayerShort p : playersListFull) {
-                        if (p.getTeamNumber().equals(teamNumber2)) {
-                            tempListB.add(p);
-                        }
-                    }
-                    Comparator <PlayerShort> cmp = (o1, o2) -> {
-                        int difference = o1.getWhiteDamage()-o2.getWhiteDamage();
-                        if (difference!=0)
-                            return o1.getWhiteDamage()-o2.getWhiteDamage();
-                        else
-                            return o1.compareTo(o2);
-                    };
-                    Collections.sort(tempListA,cmp);
-                    Collections.sort(tempListB,cmp);
-                    String formString1 = getFormattedTeamList(tempListA,false,numberWeapons);
-                    String formString2 = getFormattedTeamList(tempListB,true,numberWeapons);
-                    saveToFile(formString1, "./teamA.txt");
-                    saveToFile(formString2, "./teamB.txt");
-                } else {
-
                 }
-            }
-        } ;
 
-        scheduledFuture = scheduler.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                beeper.run();
+                ArrayList<PlayerShort> tempListB = new ArrayList<>();
+                int teamNumber2 = 3 - tempListA.get(0).getTeamNumber();
+                for (PlayerShort p : playersListFull) {
+                    if (p.getTeamNumber().equals(teamNumber2)) {
+                        tempListB.add(p);
+                    }
+                }
+                Comparator <PlayerShort> cmp = (o1, o2) -> {
+                    int difference = o1.getWhiteDamage()-o2.getWhiteDamage();
+                    if (difference!=0)
+                        return o1.getWhiteDamage()-o2.getWhiteDamage();
+                    else
+                        return o1.compareTo(o2);
+                };
+                Collections.sort(tempListA,cmp);
+                Collections.sort(tempListB,cmp);
+                String formString1 = getFormattedTeamList(tempListA,false,numberWeapons);
+                String formString2 = getFormattedTeamList(tempListB,true,numberWeapons);
+                saveToFile(formString1, "./teamA.txt");
+                saveToFile(formString2, "./teamB.txt");
             }
-        }, 5, 2, SECONDS);
+        };
+
+        scheduledFuture = scheduler.scheduleWithFixedDelay(() -> beeper.run(), 5, 2, SECONDS);
 
     }
 
@@ -79,42 +68,33 @@ public class LogReader extends Thread {
     private Integer InfoAboutTeams = 0;
     private JTextArea textA = null;
     private Integer typeOfFile = 0;
-
-
     public void SetType(Integer tp) {
         typeOfFile = tp;
     }
-
-
     private ArrayList<Player> Players = null;
     private List<PlayerShort> PList ;
     private ArrayList<PlayerShort> playersListFull;
-
     public void SetPlayers(ArrayList<Player> p) {
         Players = p;
     }
-
     public void SetMyName(String Nm) {
         myName = Nm;
     }
-
     public String getMyName() {
         return myName;
     }
-
 
     public void printCommand(String S) {
         boolean doScroll = true;
         if (textA != null) {
             textA.append(S + "\n");
-            if (doScroll == true)
+            if (doScroll)
                 textA.setCaretPosition(textA.getDocument().getLength() - 1);
         }
     }
 
-
     public LogReader() {
-        PList = Collections.synchronizedList(new ArrayList<PlayerShort>());
+        PList = Collections.synchronizedList(new ArrayList<>());
         playersListFull = new ArrayList<>();
         saveToFile();
     }
@@ -277,28 +257,28 @@ public class LogReader extends Thread {
 
     public static String parseVictim(String S) {
         String pt = "Killed. Victim: ";
-        Integer indx = S.indexOf(pt);
-        if (indx < 0)
+        Integer index = S.indexOf(pt);
+        if (index < 0)
             return "";
-        String secondPart = S.substring(indx + pt.length());
-        Integer indx2 = secondPart.indexOf(" ");
-        String Victim = S.substring(indx + pt.length(), indx + pt.length() + indx2);
+        String secondPart = S.substring(index + pt.length());
+        Integer index2 = secondPart.indexOf(" ");
+        String Victim = S.substring(index + pt.length(), index + pt.length() + index2);
         return Victim;
     }
 
     public static String parseKiller(String S) {
         String pt2 = "killer: ";
-        int indx = S.indexOf(pt2);
-        if (indx < 0)
+        int index = S.indexOf(pt2);
+        if (index < 0)
             return "";
-        String secondPart = S.substring(indx + pt2.length());
-        int indx2 = secondPart.indexOf(" ");
+        String secondPart = S.substring(index + pt2.length());
+        int index2 = secondPart.indexOf(" ");
         String Killer;
-        if (indx2 == -1) {
-            Killer = S.substring(indx + pt2.length());
+        if (index2 == -1) {
+            Killer = S.substring(index + pt2.length());
             //PrintCommand("Ошибка извлеченияимени Killer из " + currentStr);
         } else
-            Killer = S.substring(indx + pt2.length(), indx + pt2.length() + indx2);
+            Killer = S.substring(index + pt2.length(), index + pt2.length() + index2);
         return Killer;
     }
 
@@ -397,9 +377,9 @@ public class LogReader extends Thread {
             //String pt2 ="killer: ";
             if (currentStr.contains(pt)) {
                 //----------------------
-                String myname = getMyName();
+                String myName = getMyName();
                 for (Player pl : Players) {
-                    if (pl.getName().equals(myname)) {
+                    if (pl.getName().equals(myName)) {
                         teamNumber = pl.getTeamNumber();
                         //PrintCommand("Твоя команда найдена. Это " + teamNumber);
                     }
@@ -531,8 +511,8 @@ public class LogReader extends Thread {
     }
 
     public void printTeamsDataToFiles() {
-        ArrayList<PlayerShort> T1 = new ArrayList();
-        ArrayList<PlayerShort> T2 = new ArrayList();
+        ArrayList<PlayerShort> T1 = new ArrayList<>();
+        ArrayList<PlayerShort> T2 = new ArrayList<>();
         ArrayList<PlayerShort> a;
         ArrayList<PlayerShort> b;
 
@@ -570,7 +550,7 @@ public class LogReader extends Thread {
         ArrayList<PlayerShort> newA = new ArrayList<PlayerShort>();
         newA.add(myProfile);
         if (!myProfile.getTeamName().equals(NO_TEAM)) {
-            ArrayList<PlayerShort> myTeamList = new ArrayList<PlayerShort>();
+            ArrayList<PlayerShort> myTeamList = new ArrayList<>();
             for (PlayerShort p : a) {
                 if (p.getTeamName().equals(myProfile.getTeamName())) {
                     myTeamList.add(p);
@@ -619,7 +599,7 @@ public class LogReader extends Thread {
         boolean groupHomogenuity = isGroupHomogenious(pList);
         StringBuilder playersList = new StringBuilder();
         for (PlayerShort player : pList) {
-            String formString = "";
+            String formString;
             formString = String.format("%5d (%5d) %5d |%16s| ", player.getWhiteDamage(),player.getYellowDamage(),player.getScore(),player.getName());
             playersList.append(formString);
             //playersList.append(player.getName());
@@ -681,7 +661,7 @@ public class LogReader extends Thread {
 
                 String tmp = "";
                 String cmd = "Команда: ";
-                String plrs = ". Её игроки: ";
+                String players = ". Её игроки: ";
 
 
                 ArrayList<PlayerShort> T1 = new ArrayList();
@@ -713,15 +693,15 @@ public class LogReader extends Thread {
                         ArrayList<PlayerShort> tmpL = new ArrayList();
                         String TeamName1 = TT.get(0).getTeamName();
                         if (!TeamName1.equals("00000000"))
-                            tmp = tmp + cmd + TeamName1 + plrs;
-                        boolean frst = true;
+                            tmp = tmp + cmd + TeamName1 + players;
+                        boolean first = true;
                         for (PlayerShort p : TT) {
                             if (TeamName1.equals(p.getTeamName())) {
                                 tmpL.add(p);
                                 if (!p.getTeamName().equals("00000000"))
-                                    if (frst == true) {
+                                    if (first == true) {
                                         tmp += p.getName();
-                                        frst = false;
+                                        first = false;
                                     } else
                                         tmp += ", " + p.getName();
 
@@ -738,8 +718,8 @@ public class LogReader extends Thread {
 
 
                 StringSelection stringSelection = new StringSelection(tmp);
-                Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clpbrd.setContents(stringSelection, null);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
 
                 printCommand("-----------------------");
                 printCommand(tmp);
@@ -752,23 +732,23 @@ public class LogReader extends Thread {
 
 
     private void CheckTeammates(String S) {
-        String ptrn1 = "| \tplayer";
+        String pattern1 = "| \tplayer";
         String CurrentTeamName = "";
         String CurrentName = "";
         Integer CurrentNumber = 0;
-        if (S.contains(ptrn1)) {
+        if (S.contains(pattern1)) {
             //CountOfPlayers++;
             //Найти название группы
-            String ptrn2 = "party ";
-            String tmpStr1 = S.substring(S.indexOf(ptrn2) + ptrn2.length());
+            String pattern2 = "party ";
+            String tmpStr1 = S.substring(S.indexOf(pattern2) + pattern2.length());
             CurrentTeamName = tmpStr1.substring(0, tmpStr1.indexOf(','));
             //Найти имя игрока
-            String ptrn3 = "nickname: ";
-            tmpStr1 = S.substring(S.indexOf(ptrn3) + ptrn3.length());
+            String pattern3 = "nickname: ";
+            tmpStr1 = S.substring(S.indexOf(pattern3) + pattern3.length());
             CurrentName = tmpStr1.substring(0, tmpStr1.indexOf(' '));
             //Найти номер группы
-            String ptrn4 = "team: ";
-            tmpStr1 = S.substring(S.indexOf(ptrn4) + ptrn4.length());
+            String pattern4 = "team: ";
+            tmpStr1 = S.substring(S.indexOf(pattern4) + pattern4.length());
             CurrentNumber = Integer.parseInt(tmpStr1.substring(0, tmpStr1.indexOf(',')));
 
             if (CurrentName.equals(getMyName())) {
@@ -818,7 +798,7 @@ public class LogReader extends Thread {
     public void run() {
         BufferedReader inputLog = null;
         String St1 = St;
-        Boolean isItFirstTime = false;
+        boolean isItFirstTime = false;
 
         try {
             inputLog = new BufferedReader(new java.io.FileReader(St1));
@@ -868,7 +848,9 @@ public class LogReader extends Thread {
 
         } finally {
             try {
-                inputLog.close();
+                if (inputLog != null) {
+                    inputLog.close();
+                }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 System.out.println("Ошибка закрытия файла");

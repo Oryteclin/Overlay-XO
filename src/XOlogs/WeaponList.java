@@ -3,11 +3,9 @@ package XOlogs;
 import java.util.ArrayList;
 
 public class WeaponList {
-    ArrayList<Weapon> list= new ArrayList<Weapon>();
+    ArrayList<Weapon> list= new ArrayList<>();
 
     public WeaponList() {
-        //ArrayList<Weapon> list
-
     }
     public void add (Weapon weapon){
         Weapon existedWeapon = findByName(weapon.getName());

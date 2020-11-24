@@ -12,17 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import java.awt.Color;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.Line;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -40,14 +33,12 @@ public class Main_form {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Main_form window = new Main_form();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				Main_form window = new Main_form();
+				window.frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -58,30 +49,7 @@ public class Main_form {
 	public Main_form() {
 		initialize();
 	}
-	public void play(File file) 
-	{
-	    try
-	    {
-	        final Clip clip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
 
-	        clip.addLineListener(new LineListener()
-	        {
-	            @Override
-	            public void update(LineEvent event)
-	            {
-	                if (event.getType() == LineEvent.Type.STOP)
-	                    clip.close();
-	            }
-	        });
-
-	        clip.open(AudioSystem.getAudioInputStream(file));
-	        clip.start();
-	    }
-	    catch (Exception exc)
-	    {
-	        exc.printStackTrace(System.out);
-	    }
-	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -134,32 +102,28 @@ public class Main_form {
 
 		
 		JButton btnOpen = new JButton("Open");
-		btnOpen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				final JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory()+"\\My games\\Crossout\\logs");
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("combat.log", "log");
-				fc.setAcceptAllFileFilterUsed(false);
-				fc.addChoosableFileFilter(filter);
-				int returnValue = fc.showOpenDialog(null);
-				if (returnValue == JFileChooser.APPROVE_OPTION) {
-					textField.setText(fc.getSelectedFile().getAbsolutePath());
-					
-				}
-				
+		btnOpen.addActionListener(e -> {
+			final JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory()+"\\My games\\Crossout\\logs");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("combat.log", "log");
+			fc.setAcceptAllFileFilterUsed(false);
+			fc.addChoosableFileFilter(filter);
+			int returnValue = fc.showOpenDialog(null);
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				textField.setText(fc.getSelectedFile().getAbsolutePath());
+
 			}
+
 		});
 		btnOpen.setBounds(626, 5, 89, 23);
 		panel_1.add(btnOpen);
 		
 
-		btnStop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if ((myLR != null) ) {
-					myLR.interrupt();}
-			
-				if ((myLR2 != null) ) {
-					myLR2.interrupt();}
-			}
+		btnStop.addActionListener(e -> {
+			if ((myLR != null) ) {
+				myLR.interrupt();}
+
+			if ((myLR2 != null) ) {
+				myLR2.interrupt();}
 		});
 		
 		
@@ -180,39 +144,37 @@ public class Main_form {
 		JTextArea textArea = new JTextArea();
 		scrollPane.setViewportView(textArea);
 		
-		btnStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				 
-				if (((myLR == null)) || (myLR.getState().equals(Thread.State.TERMINATED))) {
-					if (!(myLR == null)){
-						System.out.print(myLR.getState());}
-					PL = new ArrayList();
-					
-					
-					myLR = new LogReader();
-					myLR.SetPlayers(PL);
-				    myLR.SetPath(textField.getText());
-					
-					
-					myLR.setTextArea(textArea);
-					
-					File F = new File(textField.getText());
-					
-					
-					myLR2 = new LogReader();
-					myLR2.SetType(1);
-					myLR2.setTextArea(textArea);
-					myLR2.SetPath(F.getParent() +"//game.log");
-					myLR2.SetPlayers(PL);
-					
-					myLR.SetMyName(myLR.readMyName());
-					myLR2.SetMyName(myLR.getMyName());
-					myLR.start();
-					myLR2.start();
-				}				
-				
-				
+		btnStart.addActionListener(e -> {
+
+			if (((myLR == null)) || (myLR.getState().equals(Thread.State.TERMINATED))) {
+				if (!(myLR == null)){
+					System.out.print(myLR.getState());}
+				PL = new ArrayList();
+
+
+				myLR = new LogReader();
+				myLR.SetPlayers(PL);
+				myLR.SetPath(textField.getText());
+
+
+				myLR.setTextArea(textArea);
+
+				File F = new File(textField.getText());
+
+
+				myLR2 = new LogReader();
+				myLR2.SetType(1);
+				myLR2.setTextArea(textArea);
+				myLR2.SetPath(F.getParent() +"//game.log");
+				myLR2.SetPlayers(PL);
+
+				myLR.SetMyName(myLR.readMyName());
+				myLR2.SetMyName(myLR.getMyName());
+				myLR.start();
+				myLR2.start();
 			}
+
+
 		});
 	}
 }

@@ -7,14 +7,13 @@ import java.util.*;
 public class SimpleDictionary {
 	Map<String, String> dictionary;
 	public SimpleDictionary(){
-		dictionary = new HashMap<String, String>();	
+		dictionary = new HashMap<>();
 		loadMap("./dictionaryParts.txt",false);
 	}
 	
 	public SimpleDictionary(String path, boolean mode){
-		dictionary = new HashMap<String, String>();	
+		dictionary = new HashMap<>();
 		loadMap(path, mode);
-		//System.out.println(dictionary.size());
 	}
 	public String findItem(String key){				
 		return dictionary.get(key);
@@ -29,7 +28,7 @@ public class SimpleDictionary {
 				if (scanner.hasNextLine()){
 					String line2 =scanner.nextLine();
 					//System.out.println(trimTag(line2));
-					if (mode == true)
+					if (mode)
 						dictionary.put(line2.toLowerCase(), line);
 					else
 						dictionary.put(line.toLowerCase(),line2); //???

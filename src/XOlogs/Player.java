@@ -2,31 +2,31 @@ package XOlogs;
 
 public class Player implements Comparable <Player>{
  Integer teamNumber =0;
- String Name = null;
- Integer PS =0;
+ String name = null;
+ Integer ps =0;
  Integer number =0;
  String uid;
 
 
 
  public Player(String name, Integer team){
-	 Name = name;
+	 this.name = name;
 	 teamNumber = team;
 
  }
  public Player(String name, Integer team, Integer N, String uid){
-	 Name = name;
+	 this.name = name;
 	 teamNumber = team;
 	 number =N;
-	 PS = 0;
+	 ps = 0;
 	 this.uid = uid;
  }
 
 
 
- public String getName(){return Name;}
+ public String getName(){return name;}
  public Integer getTeamNumber(){return teamNumber;}
- public Integer getPS() {return PS;}
+ public Integer getPs() {return ps;}
  public Integer getNumber(){return number;}
 
     public String getUid() {
@@ -37,13 +37,15 @@ public class Player implements Comparable <Player>{
         this.uid = uid;
     }
 
- public void setName(String name){Name = name;}
+ public void setName(String name){
+     this.name = name;}
  public void setTeamNumber(Integer Number){teamNumber = Number;}
- public void setPS(Integer ps){PS = ps;}
+ public void setPs(Integer ps){
+     this.ps = ps;}
  public void setNumber(Integer Num){number=Num;}
 
     @Override
     public int compareTo(Player o) {
-        return this.Name.compareTo(o.getName());
+        return this.name.compareTo(o.getName());
     }
 }
