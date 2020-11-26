@@ -120,9 +120,11 @@ public class Main_form {
 
 		btnStop.addActionListener(e -> {
 			if ((myLR != null) ) {
+				myLR.stopThread();
 				myLR.interrupt();}
 
 			if ((myLR2 != null) ) {
+				myLR2.stopThread();
 				myLR2.interrupt();}
 		});
 		

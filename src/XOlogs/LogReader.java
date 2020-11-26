@@ -4,10 +4,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -22,6 +19,11 @@ public class LogReader extends Thread {
     private final int numberWeapons=2;
     ScheduledFuture<?> scheduledFuture;
     //static private AtomicInteger saveBoolean = new AtomicInteger(0);
+    public void stopThread(){
+        if (scheduledFuture != null){
+            scheduledFuture.cancel(true);
+        }
+    }
 
     private void saveToFile() {
         final Runnable beeper = () -> {
@@ -598,9 +600,19 @@ public class LogReader extends Thread {
     private String getFormattedTeamList(List<PlayerShort> pList, boolean addWeapon, int maxWeaponCount) {
         boolean groupHomogenuity = isGroupHomogenious(pList);
         StringBuilder playersList = new StringBuilder();
+        HashMap<String, Integer> teams = new HashMap<>();
+        teams.put(NO_TEAM,0);
+        int teamIndex = 1;
+        for (PlayerShort player : pList) {
+            if (teams.get(player.getTeamName())==null){
+                teams.put(player.getTeamName(),teamIndex);
+                teamIndex ++;
+            }
+        }
         for (PlayerShort player : pList) {
             String formString;
-            formString = String.format("%5d (%5d) %5d |%16s| ", player.getWhiteDamage(),player.getYellowDamage(),player.getScore(),player.getName());
+            formString = String.format("%5d (%5d) %5d |%16s[%d] ", player.getWhiteDamage(),player.getYellowDamage(),
+                    player.getScore(),player.getName(),teams.get(player.getTeamName()));
             playersList.append(formString);
             //playersList.append(player.getName());
             //if (!player.getTeamName().equals(NO_TEAM)&&!groupHomogenuity) {
@@ -692,13 +704,13 @@ public class LogReader extends Thread {
                     while (!TT.isEmpty()) {
                         ArrayList<PlayerShort> tmpL = new ArrayList();
                         String TeamName1 = TT.get(0).getTeamName();
-                        if (!TeamName1.equals("00000000"))
+                        if (!TeamName1.equals(NO_TEAM))
                             tmp = tmp + cmd + TeamName1 + players;
                         boolean first = true;
                         for (PlayerShort p : TT) {
                             if (TeamName1.equals(p.getTeamName())) {
                                 tmpL.add(p);
-                                if (!p.getTeamName().equals("00000000"))
+                                if (!p.getTeamName().equals(NO_TEAM))
                                     if (first == true) {
                                         tmp += p.getName();
                                         first = false;
@@ -707,7 +719,7 @@ public class LogReader extends Thread {
 
                             }
                         }
-                        if (!TeamName1.equals("00000000"))
+                        if (!TeamName1.equals(NO_TEAM))
                             tmp += ". ";
                         //tmp+="\n";
                         TT.removeAll(tmpL);
