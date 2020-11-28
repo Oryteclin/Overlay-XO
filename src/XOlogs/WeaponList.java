@@ -32,4 +32,10 @@ public class WeaponList {
     public void clear(){
         list.clear();
     }
+    public void clearDamage(){
+        if (list !=null && !list.isEmpty()) {
+            for (Weapon weapon : list)
+                weapon.setDamage(0);
+        }
+    };
 }

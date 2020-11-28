@@ -18,7 +18,7 @@ public class LogReader extends Thread {
     private final SimpleDictionary dictionary = new SimpleDictionary();
     private final int numberWeapons=2;
     ScheduledFuture<?> scheduledFuture;
-    //static private AtomicInteger saveBoolean = new AtomicInteger(0);
+    private HashMap<String,WeaponList> designsHash;
     public void stopThread(){
         if (scheduledFuture != null){
             scheduledFuture.cancel(true);
@@ -28,9 +28,10 @@ public class LogReader extends Thread {
     private void saveToFile() {
         final Runnable beeper = () -> {
             if (playersListFull != null && !playersListFull.isEmpty()) {
+                List<PlayerShort> playersListFullTemp = new ArrayList<>(playersListFull);
                 ArrayList<PlayerShort> tempListA = new ArrayList<>();
-                int teamNumber = playersListFull.get(0).getTeamNumber();
-                for (PlayerShort p : playersListFull) {
+                int teamNumber = playersListFullTemp.get(0).getTeamNumber();
+                for (PlayerShort p : playersListFullTemp) {
                     if (p.getTeamNumber().equals(teamNumber)) {
                         tempListA.add(p);
                     }
@@ -38,7 +39,7 @@ public class LogReader extends Thread {
 
                 ArrayList<PlayerShort> tempListB = new ArrayList<>();
                 int teamNumber2 = 3 - tempListA.get(0).getTeamNumber();
-                for (PlayerShort p : playersListFull) {
+                for (PlayerShort p : playersListFullTemp) {
                     if (p.getTeamNumber().equals(teamNumber2)) {
                         tempListB.add(p);
                     }
@@ -75,7 +76,7 @@ public class LogReader extends Thread {
     }
     private ArrayList<Player> Players = null;
     private List<PlayerShort> PList ;
-    private ArrayList<PlayerShort> playersListFull;
+    private List<PlayerShort> playersListFull;
     public void SetPlayers(ArrayList<Player> p) {
         Players = p;
     }
@@ -97,7 +98,8 @@ public class LogReader extends Thread {
 
     public LogReader() {
         PList = Collections.synchronizedList(new ArrayList<>());
-        playersListFull = new ArrayList<>();
+        playersListFull = Collections.synchronizedList(new ArrayList<>());
+        designsHash = new HashMap<>();
         saveToFile();
     }
 
@@ -114,6 +116,16 @@ public class LogReader extends Thread {
         Integer yellowDamage;
         Integer whiteDamage;
         WeaponList myWeapon;
+
+        public String getDesignHash() {
+            return designHash;
+        }
+
+        public void setDesignHash(String designHash) {
+            this.designHash = designHash;
+        }
+
+        String designHash;
 
         public Integer getYellowDamage() {
             return yellowDamage;
@@ -156,13 +168,14 @@ public class LogReader extends Thread {
             teamName = TeamName;
         }
 
-        public PlayerShort(String Name, Integer tNumber, String tName) {
+        public PlayerShort(String Name, Integer tNumber, String tName, String hash) {
             setName(Name);
             setTeamNumber(tNumber);
             setTeamName(tName);
             setScore(0);
             setWhiteDamage(0);
             setYellowDamage(0);
+            setDesignHash(hash);
             myWeapon = new WeaponList();
         }
 
@@ -447,7 +460,7 @@ public class LogReader extends Thread {
                 String uid = currentStr.substring(currentStr.indexOf("uid ") + 4);
                 uid = uid.substring(0, uid.indexOf(' '));
 
-                Player JJ = new Player(NameP, nTm, NumberOfPl, uid);
+                Player JJ = new Player(NameP, nTm, NumberOfPl, uid, "");
                 //JJ.setNumber(NumberOfPl);
                 //PrintCommand("Перед добалением ");
                 Players.add(JJ);
@@ -517,8 +530,8 @@ public class LogReader extends Thread {
         ArrayList<PlayerShort> T2 = new ArrayList<>();
         ArrayList<PlayerShort> a;
         ArrayList<PlayerShort> b;
-
-        for (PlayerShort ps : PList) {
+        List <PlayerShort> shortList = new ArrayList<>(PList);
+        for (PlayerShort ps : shortList) {
             switch (ps.getTeamNumber()) {
                 case 1: {
                     T1.add(ps);
@@ -539,7 +552,7 @@ public class LogReader extends Thread {
         }
         Collections.sort(b);
         PlayerShort myProfile = null;
-        for (PlayerShort player : PList) {
+        for (PlayerShort player : shortList) {
             if (player.getName().equals(getMyName())) {
                 myProfile = player;
             }
@@ -564,7 +577,8 @@ public class LogReader extends Thread {
         newA.addAll(a);
         saveToFile(getFormattedTeamList(newA,false,numberWeapons), "./teamA.txt");
         saveToFile(getFormattedTeamList(b,true,numberWeapons), "./teamB.txt");
-        printCommand(getFormattedTeamList(newA,false,numberWeapons));
+        printCommand(getFormattedTeamList(newA,true,numberWeapons));
+        playersListFull.clear(); // Is it safe?
         playersListFull.addAll(newA);
         playersListFull.addAll(b);
     }
@@ -653,7 +667,7 @@ public class LogReader extends Thread {
         return playersList.toString();
     }
 
-    public void PrintTeammatesInfo() {
+    public synchronized void PrintTeammatesInfo() {
         if (PList == null) {
             printCommand("ОШИБКА. Попытка печати несозданного списка тиммейтов.");
         } else {
@@ -748,6 +762,7 @@ public class LogReader extends Thread {
         String CurrentTeamName = "";
         String CurrentName = "";
         Integer CurrentNumber = 0;
+        String designHash;
         if (S.contains(pattern1)) {
             //CountOfPlayers++;
             //Найти название группы
@@ -762,12 +777,27 @@ public class LogReader extends Thread {
             String pattern4 = "team: ";
             tmpStr1 = S.substring(S.indexOf(pattern4) + pattern4.length());
             CurrentNumber = Integer.parseInt(tmpStr1.substring(0, tmpStr1.indexOf(',')));
+            //Найти хэш дизайна крафта
+            String pattern5 = "mmHash: ";
+            tmpStr1 = S.substring(S.indexOf(pattern5) + pattern5.length());
+            designHash = tmpStr1;
 
             if (CurrentName.equals(getMyName())) {
                 setTeamNumber(CurrentNumber);
             }
             InfoAboutTeams = 1;
-            PList.add(new PlayerShort(CurrentName, CurrentNumber, CurrentTeamName));
+            PlayerShort playerShort = new PlayerShort(CurrentName, CurrentNumber, CurrentTeamName, designHash);
+            WeaponList weaponList = designsHash.get(playerShort.getDesignHash());
+            if (weaponList != null){
+                //printCommand(designHash + " is NOT NULL and LOADED");
+                for (Weapon currentWeapon : weaponList.getList()){
+                    playerShort.addWeapon(currentWeapon);
+                }
+            }
+            PList.add(playerShort);
+
+            if (PList.size() == 12)
+                PrintTeammatesInfo();
             if (PList.size() == 16) {
                 PrintTeammatesInfo();
                 InfoAboutTeams = 0;
@@ -783,6 +813,17 @@ public class LogReader extends Thread {
                 //CountOfPlayers = 0;
                 if (PList != null){
                     printCommand(getFormattedTeamList(PList,true,3));
+                    for (PlayerShort p : PList){
+                        WeaponList list = designsHash.get(p.getDesignHash());
+                        p.getWeaponList().clearDamage();
+                        if (list == null){
+                            designsHash.put(p.getDesignHash(),p.getWeaponList());
+                        } else {
+                            for (Weapon weapon : p.getWeaponList().getList()){
+                                list.add(weapon);
+                            }
+                        }
+                    }
                     PList.removeAll(PList);
                     //saveBoolean.set(1);
                 }

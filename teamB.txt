@@ -1,6 +1,6 @@
-  727 (  449)    35 |         Dominic[0] Ассемблер 727, 
+  727 (  449)    35 |         Dominic[0] Ассемблер 3431, CarPart_TruckSlope 1, 
  1152 (  572)    40 |           Ethan[0] Кавказ 741, Оса 363, 
- 1198 (  293)    66 |          Connor[0] Ассемблер 1158, CarPart_Wheel_MonsterTruck_S_C2_Raider 39, 
+ 1198 (  293)    66 |          Connor[0] Ассемблер 3431, CarPart_Wheel_MonsterTruck_S_C2_Raider 39, 
  1231 (  890)    12 | JonnyBonesJones[0] Кавказ 1186, Тесак 45, 
  1940 (  927)    34 |   J0KER_in_GAME[0] Пламя 1712, CarPart_BladeWing_epic 228, 
  3119 ( 1655)   851 |         Art_min[0] Фафнир 2196, Нитхегг 406, 

@@ -182,3 +182,13 @@ Cabin_Workers_epic
 Омнибокс
 SpearExplosive
 Бум
+Gun_Shotgun_Fixed_Rare
+Гоблин
+Gun_BigCannon_Free_rare
+Малыш
+Gun_Machinegun_Preepic
+Синус
+Gun_Shotgun_rare
+Кувалда
+Gun_Shotgun_Frontal
+Очаг

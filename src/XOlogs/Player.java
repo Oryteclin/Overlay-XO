@@ -6,7 +6,7 @@ public class Player implements Comparable <Player>{
  Integer ps =0;
  Integer number =0;
  String uid;
-
+ String designHash;
 
 
  public Player(String name, Integer team){
@@ -14,12 +14,13 @@ public class Player implements Comparable <Player>{
 	 teamNumber = team;
 
  }
- public Player(String name, Integer team, Integer N, String uid){
+ public Player(String name, Integer team, Integer N, String uid, String designHash){
 	 this.name = name;
 	 teamNumber = team;
 	 number =N;
 	 ps = 0;
 	 this.uid = uid;
+	 this.designHash = designHash;
  }
 
 
@@ -42,7 +43,14 @@ public class Player implements Comparable <Player>{
  public void setTeamNumber(Integer Number){teamNumber = Number;}
  public void setPs(Integer ps){
      this.ps = ps;}
- public void setNumber(Integer Num){number=Num;}
+    public String getDesignHash() {
+        return designHash;
+    }
+
+    public void setDesignHash(String designHash) {
+        this.designHash = designHash;
+    }
+     public void setNumber(Integer Num){number=Num;}
 
     @Override
     public int compareTo(Player o) {
