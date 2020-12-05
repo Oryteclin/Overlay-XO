@@ -192,3 +192,19 @@ Gun_Shotgun_rare
 Кувалда
 Gun_Shotgun_Frontal
 Очаг
+Military_Spikes1_Left
+Трал левый
+Military_Spikes1_Right
+Трал правый
+PowerGiver_rare
+Генка
+TankTrackRomb
+Голиаф
+TankTrackBig_epic
+Гусеница малая
+TankTrack_rare
+Гусеница укреп.
+Cabin_Tribal_Hog
+Бивень
+MechaLeg
+МН-Л 200
