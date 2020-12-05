@@ -624,9 +624,35 @@ public class LogReader extends Thread {
             }
         }
         for (PlayerShort player : pList) {
+            String weaponType = "";
+            boolean isWheel = false;
+            boolean isTrack = false;
+            boolean isHover = false;
+            for (Weapon weapon : player.getWeaponList().getList()){
+                final String pattern1 = "";
+                if (weapon.getName().startsWith("CarPart_Wheel")&&!weapon.getName().startsWith("CarPart_WheelDroneDeployer")){
+                    isWheel = true;
+                }
+                if (weapon.getName().contains("TankTrackBig_epic") ||weapon.getName().contains("TankTrackBig_legend")||
+                        weapon.getName().contains("TankTrack_rare")||weapon.getName().contains("TankTrackRomb")){
+                    isTrack = true;
+                }
+                if (weapon.getName().contains("Hover_rare")){
+                    isHover = true;
+                }
+            }
+            if (isWheel)
+                weaponType = weaponType + "К";
+            if (isTrack)
+                weaponType = weaponType + "Г";
+            if (isHover)
+                weaponType = weaponType + "Х";
+            if (weaponType.isEmpty())
+                weaponType  = "?";
             String formString;
-            formString = String.format("%5d (%5d) %5d |%16s[%d] ", player.getWhiteDamage(),player.getYellowDamage(),
-                    player.getScore(),player.getName(),teams.get(player.getTeamName()));
+            formString = String.format("%5d (%5d) %5d |%16s[%d|%s] ", player.getWhiteDamage(),player.getYellowDamage(),
+                    player.getScore(),player.getName(),teams.get(player.getTeamName()),
+                    weaponType);
             playersList.append(formString);
             //playersList.append(player.getName());
             //if (!player.getTeamName().equals(NO_TEAM)&&!groupHomogenuity) {
@@ -667,7 +693,7 @@ public class LogReader extends Thread {
         return playersList.toString();
     }
 
-    public synchronized void PrintTeammatesInfo() {
+    public void PrintTeammatesInfo() {
         if (PList == null) {
             printCommand("ОШИБКА. Попытка печати несозданного списка тиммейтов.");
         } else {
@@ -796,9 +822,16 @@ public class LogReader extends Thread {
             }
             PList.add(playerShort);
 
-            if (PList.size() == 12)
-                PrintTeammatesInfo();
-            if (PList.size() == 16) {
+            if (PList.size() == 12) {
+                boolean isMyProfileHere = false;
+                for (PlayerShort pl: PList){
+                    if (pl.getName().equals(getMyName()))
+                        isMyProfileHere = true;
+                }
+                if(isMyProfileHere)
+                    PrintTeammatesInfo();
+            }
+                if (PList.size() == 16) {
                 PrintTeammatesInfo();
                 InfoAboutTeams = 0;
             }
@@ -807,10 +840,7 @@ public class LogReader extends Thread {
                 PrintTeammatesInfo();
                 InfoAboutTeams = 0;
             }
-
-           // if (S.contains("====== starting level")) {
                 if (S.contains(" ===== Gameplay") && (!S.contains("finish"))||(S.contains("| Active battle started."))) {
-                //CountOfPlayers = 0;
                 if (PList != null){
                     printCommand(getFormattedTeamList(PList,true,3));
                     for (PlayerShort p : PList){
@@ -825,12 +855,9 @@ public class LogReader extends Thread {
                         }
                     }
                     PList.removeAll(PList);
-                    //saveBoolean.set(1);
                 }
                 else
                     System.out.println("Список не был создан. ОШИБКА");
-
-
                 if (playersListFull != null)
                     playersListFull.removeAll(playersListFull);
             }
@@ -868,24 +895,17 @@ public class LogReader extends Thread {
                         //inputLog.close();
                     }
                     if (currentStr != null) {
-                        //System.out.println(currentStr);
                         boolean isMatchFound = false;
-
                         if (isItFirstTime == false) {
                             CheckTeammates(currentStr);
-                            isMatchFound = false;
-                            if (!isMatchFound) {
-                                AdvancedCheck(currentStr);
-                            }
+                            AdvancedCheck(currentStr);
                         }
                         continue;
                     } else {
                         isItFirstTime = false;
                     }
-
                 } else
                     return;
-
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
